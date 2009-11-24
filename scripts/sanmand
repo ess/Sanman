@@ -1,0 +1,9 @@
+#!/usr/bin/perl
+
+use JSON::RPC::Server::Daemon;
+
+my $server = JSON::RPC::Server::Daemon->new( LocalPort => 9001 );
+
+$server->dispatch_to( { '/API' => 'Sanman::Server' } )->handle();
+
+__END__
