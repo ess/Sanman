@@ -2,6 +2,7 @@ package Sanman;
 
 use 5.006;
 use strict;
+use JSON;
 use Sys::Syslog;
 use IO::CaptureOutput qw(capture capture_exec);
 
@@ -80,6 +81,14 @@ sub sbin {
 
 sub commonopts {
   return $COMMONOPTS;
+}
+
+sub read_config {
+  my $config;
+  open( CONFIG, "</etc/sanman.conf");
+  $config = join('', <CONFIG> );
+  close( CONFIG );
+  return from_json( $config );
 }
 
 1;
