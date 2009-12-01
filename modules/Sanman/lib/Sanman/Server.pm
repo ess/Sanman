@@ -77,7 +77,7 @@ sub create_lv : Public( a:str, b:str, c:int ) {
 
   $results = $LVM->make_lv( $lv, $gigs, $vg );
 
-  return $result;
+  return $results;
 }
 
 package Sanman::Server::system;
