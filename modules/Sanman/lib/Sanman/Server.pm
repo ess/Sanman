@@ -68,6 +68,18 @@ sub create_vg : Public( a:str, b:str ) {
   return $results;
 }
 
+sub create_lv : Public( a:str, b:str, c:int ) {
+  my $s = shift;
+  my $obj = shift;
+  my $results = {};
+
+  my ($vg, $lv, $gigs) = ( $obj->{a}, $obj->{b}, $obj->{c} );
+
+  $results = $LVM->make_lv( $lv, $gigs, $vg );
+
+  return $result;
+}
+
 package Sanman::Server::system;
 
 sub describe {
