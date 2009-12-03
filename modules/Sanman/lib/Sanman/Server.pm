@@ -41,6 +41,11 @@ sub list_lvs : Public {
   return $LVM->get_lvs();
 }
 
+sub list_available_blockdevs : Public {
+  my $s = shift;
+  return $Block->unused_block_devices();
+}
+
 sub create_pv : Public( a:str ) {
   my $s = shift;
   my $obj = shift;
@@ -50,8 +55,11 @@ sub create_pv : Public( a:str ) {
   if( $LVM->pv_exists( $pv ) ) {
     $results->{'stderr'} = "$pv already exists as a physical volume.";
     $results->{'code'} = 9001;
-  } else {
+  } elsif( $Block->is_available( $pv ) ) {
     $results = $LVM->make_pv( $pv );
+  } else {
+    $results->{'stderr'} = "$pv is not a viable block device.";
+    $results->{'code'} = 9002;
   }
 
   return $results;
