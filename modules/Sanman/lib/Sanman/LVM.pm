@@ -65,12 +65,21 @@ sub get_pv_info {
   my $self = shift;
   my $pv = shift;
   my $infohash = {};
-  my @lines = `$SBIN/pvs $COMMONOPTS -o pv_uuid,pv_size,pv_free,pv_used,pv_pe_count,pv_pe_alloc_count $pv`;
+  my @lines = `$SBIN/pvs $COMMONOPTS -o pv_uuid,pv_name,pv_size,pv_free,pv_used,pv_pe_count,pv_pe_alloc_count,vg_name $pv`;
   @lines = map { $self->strip($_) } @lines;
 
   foreach my $line (@lines) {
-    if($line =~ /(.*):(.*):(.*):(.*):(.*):(.*)/) {
-      $infohash = { 'uuid' => $1, 'size' => $2, 'free' => $3, 'used' => $4, 'pe_count' => $5, 'pe_allocated' => $6 };
+    if($line =~ /(.*):(.*):(.*):(.*):(.*):(.*):(.*):(.*)/) {
+      $infohash = { 
+        'uuid' => $1, 
+        'name' => $2
+        'size' => $3, 
+        'free' => $4, 
+        'used' => $5, 
+        'pe_count' => $6, 
+        'pe_allocated' => $7, 
+        'vg' => $8 
+      };
     }
   }
 
@@ -81,10 +90,19 @@ sub get_vg_info {
   my $self = shift;
   my $vg = shift;
   my $infohash = {};
-  my $line = $self->strip( `$SBIN/vgs $COMMONOPTS -o vg_uuid,vg_size,vg_free,vg_extent_size,vg_extent_count,vg_free_count,lv_count $vg 2>/dev/null` );
+  my $line = $self->strip( `$SBIN/vgs $COMMONOPTS -o vg_uuid,vg_name,vg_size,vg_free,vg_extent_size,vg_extent_count,vg_free_count,lv_count $vg 2>/dev/null` );
     
-  if($line =~ /(.*):(.*):(.*):(.*):(.*):(.*):(.*)/) {
-    $infohash = { 'uuid' => $1, 'size' => $2, 'free' => $3, 'extent_size' => $4, 'extent_count' => $5, 'extents_free' => $6, 'lv_count' => $7 };
+  if($line =~ /(.*):(.*):(.*):(.*):(.*):(.*):(.*):(.*)/) {
+    $infohash = { 
+      'uuid' => $1, 
+      'name' => $2
+      'size' => $3, 
+      'free' => $4, 
+      'extent_size' => $5, 
+      'extent_count' => $6, 
+      'extents_free' => $7, 
+      'lv_count' => $8 
+    };
   }
     
   return $infohash;
