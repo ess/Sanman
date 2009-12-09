@@ -42,21 +42,46 @@ sub pv_exists {
 
   my @pvs = @{ $self->get_pvs() };
   return scalar( grep { /^$pv$/ } @pvs ) == 1;
-  #return scalar(@pvs) == 1;
+}
+
+sub pv_available {
+  my $self = shift;
+  my $pv = shift;
+
+  return length( $self->get_pv_info()->{'vg'} ) == 0;
+}
+
+sub vg_exists {
+  my $self = shift;
+  my $vg = shift;
+
+  my @vgs = @{ $self->get_vgs() };
+  return scalar( grep { /^$vg$/ } @vgs ) == 0;
+}
+
+sub lv_exists {
+  my $self = shift;
+  my ($vg, $lv) = @_;
+
 }
 
 sub get_vgs {
   my $self = shift;
   my @lines = `$SBIN/vgs $COMMONOPTS -o vg_name`;
-  @lines = map { $self->strip($_) } @lines;
+  @lines = map { $self->strip( $_ ) } @lines;
 
   return \@lines;
 }
 
 sub get_lvs {
   my $self = shift;
-  my @lines = `$SBIN/lvs $COMMONOPTS -o lv_name`;
-  @lines = map { $self->strip($_) } @lines;
+  my @lines = `$SBIN/lvs $COMMONOPTS -o vg_name,lv_name`;
+  @lines = map { 
+    my @temp = split(/\:/, $self->strip($_));
+    my $vg = $temp[0];
+    my $lv = $temp[1];
+    $self->get_lv_device_path($vg, $lv);
+  } @lines;
 
   return \@lines;
 }
@@ -66,7 +91,7 @@ sub get_pv_info {
   my $pv = shift;
   my $infohash = {};
   my @lines = `$SBIN/pvs $COMMONOPTS -o pv_uuid,pv_name,pv_size,pv_free,pv_used,pv_pe_count,pv_pe_alloc_count,vg_name $pv`;
-  @lines = map { $self->strip($_) } @lines;
+  @lines = map { $self->strip( $_ ) } @lines;
 
   foreach my $line (@lines) {
     if($line =~ /(.*):(.*):(.*):(.*):(.*):(.*):(.*):(.*)/) {
@@ -152,7 +177,6 @@ sub make_pv {
 
   my $results = {};
   $results = $self->execute_system_command("$SBIN/pvcreate $pvpath");
-#  return $self->execute_system_command("$SBIN/pvcreate $pvpath");
 
   return $results;
 }

@@ -68,10 +68,21 @@ sub create_pv : Public( a:str ) {
 sub create_vg : Public( a:str, b:str ) {
   my $s = shift;
   my $obj = shift;
-  my $results = {};
+  my $results = { 'stdout' => '', 'stderr' => '', 'code' => '' };
 
   my ($vg, $pv) = ( $obj->{a}, $obj->{b} );
-  $results = $LVM->make_vg( $vg, $pv );
+
+  if( $LVM->pv_exists( $pv ) ) {
+    if( $LVM->pv_available( $pv ) ) {
+      $results = $LVM->make_vg( $vg, $pv );
+    } else {
+      $results{'code'} = 9003;
+      $results{'stderr'} = "$pv is already assigned to a volume group."
+    }
+  } else {
+    $results{'code'} = 9004;
+    $results{'stderr'} = "$pv does not exist as a physical volume."
+  }
 
   return $results;
 }
