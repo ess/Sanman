@@ -80,7 +80,8 @@ sub get_lvs {
     my @temp = split(/\:/, $self->strip($_));
     my $vg = $temp[0];
     my $lv = $temp[1];
-    $self->get_lv_device_path($vg, $lv);
+    #$self->get_lv_device_path($vg, $lv);
+    "$vg -> $lv";
   } @lines;
 
   return \@lines;
