@@ -64,7 +64,7 @@ sub lv_exists {
   my ($vg, $lv) = @_;
 
   my @vgs = @{ $self->get_lvs };
-  return scalar( grep { /^$vg\s+-\>\s+$pv$/ } @lvs ) == 0;
+  return scalar( grep { /^$vg\s+-\>\s+$lv$/ } @lvs ) == 0;
 }
 
 sub get_vgs {
