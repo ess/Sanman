@@ -17,12 +17,15 @@ my $ISCSI = Sanman::ISCSI->new();
 
 sub _allowable_procedure {
   return {
-    list_pvs => \&list_pvs,
-    list_vgs => \&list_vgs,
-    list_lvs => \&list_lvs,
-    create_pv => \&create_pv,
-    create_vg => \&create_vg,
-    create_lv => \&create_lv,
+    list_pvs    => \&list_pvs,
+    list_vgs    => \&list_vgs,
+    list_lvs    => \&list_lvs,
+    create_pv   => \&create_pv,
+    create_vg   => \&create_vg,
+    create_lv   => \&create_lv,
+    pv_info     => \&pv_info,
+    vg_info     => \&vg_info,
+    lv_info     => \&lv_info,
   };
 }
 
@@ -46,6 +49,35 @@ sub list_available_blockdevs : Public {
   return $Block->unused_block_devices();
 }
 
+sub pv_info : Public( pv:str ) {
+  my $s = shift;
+  my $obj = shift;
+  my $pv = $obj->{pv};
+  my $results = { 'stdout' => '', 'stderr' => '', 'code' => '' };
+
+  if( $LVM->pv_exists( $pv ) ) {
+    $results = $LVM->get_pv_info( $pv );
+  } else {
+    $results->{'stderr'} = "$pv does not exist as a physical volume.";
+    $results->{'code'} = 9001;
+  }
+  return $LVM->get_pv_info( $pv );
+}
+
+sub vg_info {
+  my $s = shift;
+  my $obj = shift;
+
+  return 0;
+}
+
+sub lv_info {
+  my $s = shift;
+  my $obj = shift;
+
+  return 0
+}
+
 sub create_pv : Public( a:str ) {
   my $s = shift;
   my $obj = shift;
@@ -54,12 +86,12 @@ sub create_pv : Public( a:str ) {
 
   if( $LVM->pv_exists( $pv ) ) {
     $results->{'stderr'} = "$pv already exists as a physical volume.";
-    $results->{'code'} = 9001;
+    $results->{'code'} = 9002;
   } elsif( $Block->is_available( $pv ) ) {
     $results = $LVM->make_pv( $pv );
   } else {
     $results->{'stderr'} = "$pv is not a viable block device.";
-    $results->{'code'} = 9002;
+    $results->{'code'} = 9003;
   }
 
   return $results;
@@ -76,11 +108,11 @@ sub create_vg : Public( a:str, b:str ) {
     if( $LVM->pv_available( $pv ) ) {
       $results = $LVM->make_vg( $vg, $pv );
     } else {
-      $results->{'code'} = 9003;
+      $results->{'code'} = 9101;
       $results->{'stderr'} = "$pv is already assigned to a volume group."
     }
   } else {
-    $results->{'code'} = 9004;
+    $results->{'code'} = 9001;
     $results->{'stderr'} = "$pv does not exist as a physical volume."
   }
 
