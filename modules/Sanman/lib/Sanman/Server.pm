@@ -76,12 +76,12 @@ sub create_vg : Public( a:str, b:str ) {
     if( $LVM->pv_available( $pv ) ) {
       $results = $LVM->make_vg( $vg, $pv );
     } else {
-      $results{'code'} = 9003;
-      $results{'stderr'} = "$pv is already assigned to a volume group."
+      $results->{'code'} = 9003;
+      $results->{'stderr'} = "$pv is already assigned to a volume group."
     }
   } else {
-    $results{'code'} = 9004;
-    $results{'stderr'} = "$pv does not exist as a physical volume."
+    $results->{'code'} = 9004;
+    $results->{'stderr'} = "$pv does not exist as a physical volume."
   }
 
   return $results;
