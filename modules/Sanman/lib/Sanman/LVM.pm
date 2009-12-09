@@ -97,7 +97,7 @@ sub get_pv_info {
     if($line =~ /(.*):(.*):(.*):(.*):(.*):(.*):(.*):(.*)/) {
       $infohash = { 
         'uuid' => $1, 
-        'name' => $2
+        'name' => $2,
         'size' => $3, 
         'free' => $4, 
         'used' => $5, 
