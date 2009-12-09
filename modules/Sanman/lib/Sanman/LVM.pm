@@ -120,7 +120,7 @@ sub get_vg_info {
   if($line =~ /(.*):(.*):(.*):(.*):(.*):(.*):(.*):(.*)/) {
     $infohash = { 
       'uuid' => $1, 
-      'name' => $2
+      'name' => $2,
       'size' => $3, 
       'free' => $4, 
       'extent_size' => $5, 
