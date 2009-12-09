@@ -61,7 +61,9 @@ sub pv_info : Public( pv:str ) {
     $results->{'stderr'} = "$pv does not exist as a physical volume.";
     $results->{'code'} = 9001;
   }
-  return $LVM->get_pv_info( $pv );
+
+  print "pv_info results:\n\n" . Dumper( $results ) . "\n\n";
+  return $results;
 }
 
 sub vg_info {
