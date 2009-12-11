@@ -66,7 +66,7 @@ sub pv_info : Public( pv:str ) {
   return $results;
 }
 
-sub vg_info : Public( pv:str ) {
+sub vg_info : Public( vg:str ) {
   my $s = shift;
   my $obj = shift;
   my $vg = $obj->{vg};
