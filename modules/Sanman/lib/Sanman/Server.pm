@@ -89,6 +89,8 @@ sub lv_info : Public( vg:str, lv:str ) {
   my $vg = $obj->{vg};
   my $results =  { 'stdout' => '', 'stderr' => '', 'code' => '' };
 
+  print "Sanman::Server::lv_info( { vg => $vg, lv => $lv } )\n";
+
   if( $LVM->lv_exists( $vg, $lv ) ) {
     $results = $LVM->get_lv_info( $vg, $lv );
   } else {
