@@ -66,18 +66,37 @@ sub pv_info : Public( pv:str ) {
   return $results;
 }
 
-sub vg_info {
+sub vg_info : Public( pv:str ) {
   my $s = shift;
   my $obj = shift;
+  my $vg = $obj->{vg};
+  my $results = { 'stdout' => '', 'stderr' => '', 'code' => '' };
 
-  return 0;
+  if( $LVM->pv_exists( $pv ) ) {
+    $results = $LVM->get_vg_info( $vg );
+  } else {
+    $results->{'stderr'} = "The volume group '$vg' does not exist.";
+    $results->{'code'} = 9101;
+  }
+
+  return $results;
 }
 
-sub lv_info {
+sub lv_info : Public( vg:str, lv:str ) {
   my $s = shift;
   my $obj = shift;
+  my $lv = $obj->{lv};
+  my $vg = $obj->{vg};
+  my $results =  { 'stdout' => '', 'stderr' => '', 'code' => '' };
 
-  return 0
+  if( $LVM->lv_exists( $vg, $lv ) ) {
+    $results = $LVM->get_lv_info( $vg, $lv );
+  } else {
+    $results->{'stderr'} = "The volume '$vg -> $lv' does not exist.";
+    $results->{'code'} = 9301;
+  }
+
+  return $results;
 }
 
 sub create_pv : Public( a:str ) {
@@ -110,7 +129,7 @@ sub create_vg : Public( a:str, b:str ) {
     if( $LVM->pv_available( $pv ) ) {
       $results = $LVM->make_vg( $vg, $pv );
     } else {
-      $results->{'code'} = 9101;
+      $results->{'code'} = 9102;
       $results->{'stderr'} = "$pv is already assigned to a volume group."
     }
   } else {
