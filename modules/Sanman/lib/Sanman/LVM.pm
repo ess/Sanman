@@ -142,8 +142,13 @@ sub get_vg_info {
 sub get_lv_device_path {
   my $self = shift;
   my ( $vg, $lv ) = @_;
+
+  print "Sanman::LVM::get_lv_device_path( $vg, $lv )\n";
+
   my $line = `$SBIN/lvdisplay -c $vg/$lv 2>/dev/null`;
   my @temp = split(/\:/, $self->strip( $line ) );
+
+  print "The device path is:  ", $temp[0], "\n";
   return $temp[0];
 }
 
@@ -151,6 +156,8 @@ sub get_lv_info {
   my $self = shift;
   my ($vg, $lv) = @_;
   my $infohash = {};
+
+  print "Sanman::LVM::get_lv_info( $vg, $lv )\n";
 
   $infohash->{ 'lv_path' } = &get_lv_device_path( $vg, $lv );
 
@@ -174,8 +181,7 @@ sub get_lv_info {
   $infohash->{ 'state_attr'             } = $attrs[4];
   $infohash->{ 'device_attr'            } = $attrs[5];
 
-  print "Sanman::LVM::get_lv_info( $vg, $lv )\n";
-  print Dumper($infohash), "\n";
+  print "contents of infohash:\n", Dumper($infohash), "\n";
   return $infohash;
 }
 
