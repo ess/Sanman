@@ -56,7 +56,7 @@ sub vg_exists {
   my $vg = shift;
 
   my @vgs = @{ $self->get_vgs() };
-  return scalar( grep { /^$vg$/ } @vgs ) == 0;
+  return scalar( grep { /^$vg$/ } @vgs ) == 1;
 }
 
 sub lv_exists {
@@ -64,7 +64,7 @@ sub lv_exists {
   my ($vg, $lv) = @_;
 
   my @lvs = @{ $self->get_lvs };
-  return scalar( grep { /^$vg\s+-\>\s+$lv$/ } @lvs ) == 0;
+  return scalar( grep { /^$vg\s+-\>\s+$lv$/ } @lvs ) == 1;
 }
 
 sub get_vgs {
