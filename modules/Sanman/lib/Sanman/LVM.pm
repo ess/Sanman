@@ -167,7 +167,7 @@ sub get_lv_info {
 
   my $attributes;
   my $line = $self->strip( `$SBIN/lvs $COMMONOPTS -o lv_name,lv_uuid,vg_name,lv_size,lv_attr $vg/$lv 2>/dev/null` ) ;
-  if($line =~ /(.*):(.*):(.*):(.*)/) {
+  if($line =~ /(.*):(.*):(.*):(.*):(.*)/) {
     $infohash = { 'name' => $1, 'uuid' => $2, 'vg' => $3, 'size' => $4 };
     $attributes = $5;
   }
