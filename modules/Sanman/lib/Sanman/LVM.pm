@@ -4,6 +4,8 @@ use 5.006;
 use strict;
 use Sanman;
 
+use Data::Dumper;
+
 require Exporter;
 use AutoLoader qw(AUTOLOAD);
 
@@ -172,6 +174,8 @@ sub get_lv_info {
   $infohash->{ 'state_attr'             } = $attrs[4];
   $infohash->{ 'device_attr'            } = $attrs[5];
 
+  print "Sanman::LVM::get_lv_info( $vg, $lv )\n";
+  print Dumper($infohash), "\n";
   return $infohash;
 }
 
