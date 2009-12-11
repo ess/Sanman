@@ -159,7 +159,7 @@ sub get_lv_info {
 
   print "Sanman::LVM::get_lv_info( $vg, $lv )\n";
 
-  $infohash->{ 'lv_path' } = &get_lv_device_path( $vg, $lv );
+  $infohash->{ 'lv_path' } = $self->get_lv_device_path( $vg, $lv );
 
   if( length( $infohash->{ 'lv_path' } ) == 0 ) {
     return undef;
