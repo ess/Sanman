@@ -92,7 +92,9 @@ sub lv_info : Public( vg:str, lv:str ) {
   print "Sanman::Server::lv_info( { vg => $vg, lv => $lv } )\n";
 
   if( $LVM->lv_exists( $vg, $lv ) ) {
+    print "$vg -> $lv exists!\n";
     $results = $LVM->get_lv_info( $vg, $lv );
+    print "Just ran get_lv_info\n";
   } else {
     $results->{'stderr'} = "The volume '$vg -> $lv' does not exist.";
     $results->{'code'} = 9301;
