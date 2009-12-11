@@ -72,7 +72,7 @@ sub vg_info : Public( pv:str ) {
   my $vg = $obj->{vg};
   my $results = { 'stdout' => '', 'stderr' => '', 'code' => '' };
 
-  if( $LVM->pv_exists( $pv ) ) {
+  if( $LVM->vg_exists( $vg ) ) {
     $results = $LVM->get_vg_info( $vg );
   } else {
     $results->{'stderr'} = "The volume group '$vg' does not exist.";
