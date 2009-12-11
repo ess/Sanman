@@ -55,6 +55,7 @@ sub vg_exists {
   my $self = shift;
   my $vg = shift;
 
+  print "Sanman::LVM::vg_exists( $vg )\n";
   my @vgs = @{ $self->get_vgs() };
   return scalar( grep { /^$vg$/ } @vgs ) == 1;
 }
